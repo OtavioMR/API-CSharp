@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using TaskList.Data;
 using TaskList.DTOs;
 using TaskList.Models;
@@ -35,6 +36,28 @@ namespace TaskList.Controllers
             var tasks = _service.ListarTasks();
 
             return Ok(tasks);
+        }
+
+        [HttpPut("atualizar/{id}")]
+        public IActionResult Put(int id, [FromBody] Create_Task dto)
+        {
+            var task = _service.atualizarTask(id, dto);
+
+            if(task == null)
+            {
+                return NotFound("Task não encontrada");
+            }
+
+            return Ok(task);
+        }
+
+        [HttpDelete("deletar/{id}")]
+        public IActionResult Delete(int id)
+        {
+            var task = _service.deletarTask(id);
+            if (task == null) return NotFound("Task não encontrada");
+
+            return NoContent(); // 204
         }
 
         //[HttpGet]

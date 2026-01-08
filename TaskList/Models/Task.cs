@@ -12,5 +12,13 @@
             Titulo = titulo;
             Descricao = descricao;
         }
+
+        public void Atualizar(string titulo, string descricao)
+        {
+            Titulo = titulo;
+            Descricao = descricao;
+        }
+
+
     }
 }
