@@ -19,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddScoped<TaskService>();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<AuthService>();
 //builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IRepository<TaskItem>, TaskRepository>();
 builder.Services.AddScoped<IRepository<Usuario>, UsuarioRepository>();
@@ -56,11 +57,13 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ClockSkew = TimeSpan.Zero
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
 
@@ -101,7 +104,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Só para dev por enquanto
+//app.UseHttpsRedirection();
 
 // Enable Authentication and Authorization
 app.UseAuthentication();

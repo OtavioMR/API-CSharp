@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using TaskList.Data;
 using TaskList.DTOs;
@@ -31,6 +32,7 @@ namespace TaskList.Controllers
             return Ok(task);
         }
 
+        [Authorize]
         [HttpGet("listar")]
         public async Task<IActionResult> GetAll()
         {

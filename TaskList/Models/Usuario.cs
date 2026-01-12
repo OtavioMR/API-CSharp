@@ -18,10 +18,6 @@
             Email = email;
         }
 
-        public string GetEmailAndSenha()
-        {
-            return $"{Email}:{Senha}";
-        }
 
     }
 }

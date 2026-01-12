@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using TaskList.DTOs;
 using TaskList.Models;
 using TaskList.Repositories.Interfaces;
@@ -25,7 +29,7 @@ namespace TaskList.Services
             return await _repo.CreateAsync(usuario);
         }
 
-     
+
         public async Task<IEnumerable<Usuario>> GetAllUsuarios() => await _repo.GetAllAsync();
         public async Task<Usuario?> GetUsuarioById(int id) => await _repo.GetByIdAsync(id);
         public async Task<Usuario?> UpdateUsuario(int id, Create_Usuario dto)
@@ -36,7 +40,5 @@ namespace TaskList.Services
         }
 
         public async Task<Usuario?> DeleteUsuario(int id) => await _repo.DeleteAsync(id);
-
-
     }
 }
