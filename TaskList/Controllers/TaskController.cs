@@ -19,29 +19,43 @@ namespace TaskList.Controllers
         }
 
         [HttpPost("criar")]
-        public IActionResult Create([FromBody] Create_Task dto)
+        public async Task<IActionResult> Create([FromBody] Create_Task dto)
         {
-           var task = _service.criarTask(dto);
+           var task = await _service.CreateTask(dto);
+
+            if (task == null)
+            {
+                return BadRequest("Preencha todos os campos!");
+            }
 
             return Ok(task);
         }
 
         [HttpGet("listar")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-       
-            if(!_service.temTask()) return NotFound("Nenhuma task cadastrada");
+            var tasks = await _service.GetAllTasks();
 
-
-            var tasks = _service.ListarTasks();
+            if (!tasks.Any()) return NotFound("Nenhuma task cadastrada");
 
             return Ok(tasks);
         }
 
-        [HttpPut("atualizar/{id}")]
-        public IActionResult Put(int id, [FromBody] Create_Task dto)
+        [HttpGet("listar/{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            var task = _service.atualizarTask(id, dto);
+            var task = await _service.GetTaskById(id);
+            if (task == null)
+            {
+                return NotFound("Task não encontrada");
+            }
+            return Ok(task);
+        }
+
+        [HttpPut("atualizar/{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] Create_Task dto)
+        {
+            var task = await _service.UpdateTask(id, dto);
 
             if(task == null)
             {
@@ -52,18 +66,29 @@ namespace TaskList.Controllers
         }
 
         [HttpDelete("deletar/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var task = _service.deletarTask(id);
+            var task = await _service.DeleteTask(id);
             if (task == null) return NotFound("Task não encontrada");
 
-            return NoContent(); // 204
+            return NoContent();
         }
 
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    return Ok(_context.Tasks.ToList());
-        //}
+        [HttpPatch("concluir/{id}")]
+        public async Task<IActionResult> Patch(int id)
+        {
+            var task = await _service.GetTaskById(id);
+
+            if (task == null)
+            {
+                return NotFound("Task não encontrada");
+            }
+
+            task = await _service.UpdateConcluirTask(id);
+
+            return Ok(task);
+
+        }
+
     }
 }

@@ -11,7 +11,7 @@ using TaskList.Data;
 namespace TaskList.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260108150819_InitialCreate")]
+    [Migration("20260109175527_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,6 +35,9 @@ namespace TaskList.Migrations
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("TerefaConcluida")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Titulo")
                         .IsRequired()

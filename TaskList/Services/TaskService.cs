@@ -3,71 +3,35 @@ using System.Security.Cryptography.X509Certificates;
 using TaskList.Data;
 using TaskList.DTOs;
 using TaskList.Models;
+using TaskList.Repositories.Interfaces;
 
 namespace TaskList.Services
 {
     public class TaskService
     {
-        private readonly AppDbContext _context;
+        private readonly IRepository<TaskItem> _repo;
 
-        public TaskService(AppDbContext context)
+        public TaskService(IRepository<TaskItem> repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
-        public TaskItem criarTask(Create_Task dto)
+        public async Task<IEnumerable<TaskItem>> GetAllTasks() => await _repo.GetAllAsync();
+        public async Task<TaskItem?> GetTaskById(int id) => await _repo.GetByIdAsync(id);
+        public async Task<TaskItem?> CreateTask(Create_Task dto)
         {
             var task = new TaskItem(dto.Titulo, dto.Descricao);
 
-            _context.Tasks.Add(task);
-            _context.SaveChanges();
-
-            return task;
+            return await _repo.CreateAsync(task);
         }
-
-        public bool temTask()
+        public async Task<TaskItem?> UpdateTask(int id, Create_Task dto)
         {
-            return _context.Tasks.Any();
+            var task = new TaskItem(dto.Titulo, dto.Descricao);
+
+            return await _repo.UpdateAsync(id, task);
         }
+        public async Task<TaskItem?> UpdateConcluirTask(int id) => await _repo.UpdateConcluirAsync(id);
+        public async Task<TaskItem?> DeleteTask(int id) => await _repo.DeleteAsync(id);
 
-        public List<TaskItem> ListarTasks()
-        {
-
-            var tasks = _context.Tasks.ToList();
-
-            return tasks;
-        }
-
-        public TaskItem atualizarTask(int id, Create_Task dto)
-        {
-            var task = _context.Tasks.Find(id);
-
-            if(task == null)
-            {
-                return null;
-            }
-
-            task.Atualizar(dto.Titulo, dto.Descricao);
-
-            _context.SaveChanges();
-
-            return task;
-        }
-
-        public TaskItem deletarTask(int id)
-        {
-            var task = _context.Tasks.Find(id);
-
-            if( task == null )
-            {
-                return null;
-            }
-
-            _context.Tasks.Remove(task);
-            _context.SaveChanges();
-
-            return task;
-        }
-   
     }
 }

@@ -18,7 +18,8 @@ namespace TaskList.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Titulo = table.Column<string>(type: "text", nullable: false),
-                    Descricao = table.Column<string>(type: "text", nullable: false)
+                    Descricao = table.Column<string>(type: "text", nullable: false),
+                    TerefaConcluida = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

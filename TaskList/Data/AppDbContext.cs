@@ -9,5 +9,7 @@ namespace TaskList.Data
             base(options) { }
 
         public DbSet<TaskItem> Tasks { get; set; }
+
+        public DbSet<Usuario> Usuarios { get; set; }
     }
 }
